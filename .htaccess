@@ -1,0 +1,96 @@
+# TrackMate - .htaccess Configuration
+
+# Enable rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /trackmate/
+    
+    # Force HTTPS (uncomment when you have SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Redirect to login if accessing root
+    RewriteCond %{REQUEST_URI} ^/trackmate/?$
+    RewriteRule ^(.*)$ login.html [L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # CORS Headers - Allow access from any IP (Tailscale, localhost, etc.)
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Allow-Credentials "true"
+    
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (adjust as needed)
+    # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Prevent access to sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "(config\.php|\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# PHP Settings
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# Error Pages (create these files if needed)
+# ErrorDocument 404 /trackmate/404.html
+# ErrorDocument 403 /trackmate/403.html
+# ErrorDocument 500 /trackmate/500.html
+
+# Prevent hotlinking
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?100.81.138.65 [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|svg|ico)$ - [NC,F,L]
+</IfModule>

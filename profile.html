@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF9F66">
+    <meta name="description" content="TrackMate Profile">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Profile - TrackMate</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="20" height="20" rx="4" fill="#FF9F66"/>
+                <rect x="30" y="5" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="5" y="30" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="30" y="30" width="20" height="20" rx="4" fill="#FF9F66"/>
+            </svg>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">📊</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">📅</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">📷</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">⏰</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">⚙️</span>
+            </a>
+        </nav>
+        
+        <a href="profile.html" class="nav-item profile-icon active">
+            <span class="icon">👤</span>
+        </a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="profile-container">
+            <!-- Profile Header -->
+            <div class="profile-header-section">
+                <a href="dashboard.html" class="back-link">
+                    <span>←</span> Back to Dashboard
+                </a>
+                
+                <div class="profile-card">
+                    <div class="avatar-section">
+                        <div class="avatar-wrapper">
+                            <div class="avatar-circle">
+                                <span class="avatar-emoji">👤</span>
+                            </div>
+                            <button class="edit-avatar-btn">📷</button>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <h1 class="profile-name" id="profileName">Taj</h1>
+                            <p class="profile-membership">Premium Member</p>
+                            <p class="profile-email" id="profileEmail">taj@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button class="btn-profile btn-primary" onclick="openEditModal()">Edit Profile</button>
+                        <button class="btn-profile btn-secondary" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Details Grid -->
+            <div class="profile-grid">
+                <!-- Personal Information -->
+                <div class="profile-section-card">
+                    <h2 class="section-title">Personal Information</h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-card cyan">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value" id="userGender">-</div>
+                        </div>
+                        
+                        <div class="info-card cyan">
+                            <div class="info-label">Age</div>
+                            <div class="info-value" id="userAge">-</div>
+                        </div>
+                        
+                        <div class="info-card cyan">
+                            <div class="info-label">Height</div>
+                            <div class="info-value" id="userHeight">-</div>
+                        </div>
+                        
+                        <div class="info-card cyan">
+                            <div class="info-label">Weight</div>
+                            <div class="info-value" id="userWeight">-</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Settings -->
+                <div class="profile-section-card">
+                    <h2 class="section-title">Account Settings</h2>
+                    
+                    <div class="settings-list">
+                        <a href="backup-codes.html" class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-icon">🔐</span>
+                                <div>
+                                    <div class="setting-name">Backup Codes</div>
+                                    <div class="setting-desc">Manage recovery codes</div>
+                                </div>
+                            </div>
+                            <span class="arrow">→</span>
+                        </a>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-icon">🔔</span>
+                                <div>
+                                    <div class="setting-name">Notifications</div>
+                                    <div class="setting-desc">Manage notification preferences</div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-icon">📷</span>
+                                <div>
+                                    <div class="setting-name">Camera Monitoring</div>
+                                    <div class="setting-desc">Activity tracking via camera</div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <button class="setting-item clickable">
+                            <div class="setting-info">
+                                <span class="setting-icon">🔒</span>
+                                <div>
+                                    <div class="setting-name">Change Password</div>
+                                    <div class="setting-desc">Update your password</div>
+                                </div>
+                            </div>
+                            <span class="arrow">→</span>
+                        </button>
+                        
+                        <button class="setting-item clickable">
+                            <div class="setting-info">
+                                <span class="setting-icon">📊</span>
+                                <div>
+                                    <div class="setting-name">Privacy Settings</div>
+                                    <div class="setting-desc">Manage data and privacy</div>
+                                </div>
+                            </div>
+                            <span class="arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Activity Summary -->
+                <div class="profile-section-card">
+                    <h2 class="section-title">Activity Summary</h2>
+                    
+                    <div class="summary-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-value">145h</div>
+                            <div class="stat-label">Total Study Time</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">💪</div>
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Days Active</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Goal Achievement</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-value">1,240</div>
+                            <div class="stat-label">Total Points</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Danger Zone -->
+                <div class="profile-section-card danger-zone">
+                    <h2 class="section-title">Danger Zone</h2>
+                    
+                    <div class="danger-actions">
+                        <button class="danger-btn">
+                            <span>🗑️</span>
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

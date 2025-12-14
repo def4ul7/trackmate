@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF9F66">
+    <meta name="description" content="TrackMate Dashboard - Monitor your activities">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Dashboard - TrackMate</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="20" height="20" rx="4" fill="#FF9F66"/>
+                <rect x="30" y="5" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="5" y="30" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="30" y="30" width="20" height="20" rx="4" fill="#FF9F66"/>
+            </svg>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item active">
+                <span class="icon">📊</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">📅</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">📷</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">⏰</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon">⚙️</span>
+            </a>
+        </nav>
+        
+        <a href="profile.html" class="nav-item profile-icon">
+            <span class="icon">👤</span>
+        </a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="5" y="5" width="20" height="20" rx="4" fill="#FF9F66"/>
+                        <rect x="30" y="5" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                        <rect x="5" y="30" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                        <rect x="30" y="30" width="20" height="20" rx="4" fill="#FF9F66"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="header-title">TrackMate - Dashboard</h1>
+                    <p class="header-date" id="currentDate">May 5, 2025</p>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="icon-btn">🔍</button>
+                <button class="icon-btn">🔔</button>
+                <a href="profile.html" class="icon-btn" title="View Profile">👤</a>
+                <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
+            </div>
+        </header>
+        
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Activity Cards Row -->
+                <div class="activity-cards-row">
+                    <div class="activity-card card-study">
+                        <div class="card-header">
+                            <div class="card-icon">📚</div>
+                            <h3 class="card-title">Study</h3>
+                        </div>
+                        <div class="card-value">05<span class="unit">h</span></div>
+                        <div class="card-badge">Normal</div>
+                        <svg class="mini-chart" viewBox="0 0 100 30" preserveAspectRatio="none">
+                            <path d="M 0,20 L 20,15 L 40,18 L 60,12 L 80,16 L 100,10" 
+                                  stroke="#FFB366" stroke-width="2" fill="none"/>
+                            <path d="M 0,20 L 20,15 L 40,18 L 60,12 L 80,16 L 100,10 L 100,30 L 0,30 Z" 
+                                  fill="url(#gradStudy)"/>
+                            <defs>
+                                <linearGradient id="gradStudy" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFB366" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#FFB366" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    
+                    <div class="activity-card card-meditation">
+                        <div class="card-header">
+                            <div class="card-icon">❤️</div>
+                            <h3 class="card-title">Meditation</h3>
+                        </div>
+                        <div class="card-value">01<span class="unit">h</span></div>
+                        <div class="card-badge">Normal</div>
+                        <svg class="mini-chart" viewBox="0 0 100 30" preserveAspectRatio="none">
+                            <path d="M 0,18 L 20,14 L 40,16 L 60,13 L 80,15 L 100,12" 
+                                  stroke="#FFB3B3" stroke-width="2" fill="none"/>
+                            <path d="M 0,18 L 20,14 L 40,16 L 60,13 L 80,15 L 100,12 L 100,30 L 0,30 Z" 
+                                  fill="url(#gradMed)"/>
+                            <defs>
+                                <linearGradient id="gradMed" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFB3B3" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#FFB3B3" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    
+                    <div class="activity-card card-screen">
+                        <div class="card-header">
+                            <div class="card-icon">📱</div>
+                            <h3 class="card-title">Screen Time</h3>
+                        </div>
+                        <div class="card-value">07<span class="unit">h</span></div>
+                        <div class="card-badge high">High</div>
+                        <svg class="mini-chart" viewBox="0 0 100 30" preserveAspectRatio="none">
+                            <path d="M 0,16 L 20,20 L 40,15 L 60,18 L 80,14 L 100,17" 
+                                  stroke="#9CDDDD" stroke-width="2" fill="none"/>
+                            <path d="M 0,16 L 20,20 L 40,15 L 60,18 L 80,14 L 100,17 L 100,30 L 0,30 Z" 
+                                  fill="url(#gradScreen)"/>
+                            <defs>
+                                <linearGradient id="gradScreen" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#9CDDDD" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#9CDDDD" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Productivity Graph -->
+                <div class="productivity-graph">
+                    <div class="graph-header">
+                        <h3 class="section-title">Productivity Graph</h3>
+                        <select class="month-select">
+                            <option>April 2025</option>
+                            <option>May 2025</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="productivityChart"></canvas>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="dot study-dot"></span>Study</span>
+                        <span class="legend-item"><span class="dot code-dot"></span>Code</span>
+                        <span class="legend-item"><span class="dot meditation-dot"></span>Meditation</span>
+                    </div>
+                </div>
+                
+                <footer class="dashboard-footer">
+                    <span>TrackMate - 2025</span>
+                    <span>Stay Productive</span>
+                </footer>
+            </div>
+            
+            <!-- Right Column - Health Panel -->
+            <div class="right-column">
+                <div class="health-panel">
+                    <div class="health-header">
+                        <h3 class="health-title">Health</h3>
+                        <span class="user-greeting" id="userGreeting">Hello, Taj</span>
+                    </div>
+                    
+                    <button class="edit-profile-btn" onclick="openEditProfileModal()">
+                        <span>✏️</span> Edit Profile
+                    </button>
+                    
+                    <div class="health-info-cards">
+                        <div class="info-card height-card">
+                            <div class="info-label">Height</div>
+                            <div class="info-value" id="userHeight">170 cm</div>
+                        </div>
+                        <div class="info-card weight-card">
+                            <div class="info-label">Weight</div>
+                            <div class="info-value" id="userWeight">72 kg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bmi-section">
+                        <div class="bmi-label">Body Mass Index (BMI)</div>
+                        <div class="bmi-value" id="bmiValue">24.9</div>
+                        <div class="bmi-status healthy">You're Healthy</div>
+                        <div class="bmi-range-bar">
+                            <div class="bmi-marker" style="left: 50%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="health-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Heart Rate</div>
+                            <div class="metric-value" id="heartRate">44.5</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Sleep (h)</div>
+                            <div class="metric-value" id="sleepHours">6.5</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Water (glass)</div>
+                            <div class="metric-value" id="waterGlasses">6</div>
+                        </div>
+                    </div>
+                    
+                    <div class="body-diagram">
+                        <svg viewBox="0 0 200 380" class="body-svg">
+                            <!-- Head -->
+                            <circle cx="100" cy="45" r="28" fill="#FFDBAC"/>
+                            <!-- Hair -->
+                            <path d="M 72 38 Q 72 15, 100 15 Q 128 15, 128 38" fill="#3C2415" stroke="none"/>
+                            <!-- Facial features -->
+                            <circle cx="88" cy="42" r="2" fill="#3C2415"/>
+                            <circle cx="112" cy="42" r="2" fill="#3C2415"/>
+                            <path d="M 90 52 Q 100 56, 110 52" stroke="#3C2415" stroke-width="1" fill="none"/>
+                            
+                            <!-- Neck -->
+                            <rect x="92" y="70" width="16" height="22" fill="#FFDBAC"/>
+                            
+                            <!-- Upper Body (White T-shirt) -->
+                            <ellipse cx="100" cy="115" rx="42" ry="24" fill="#FFFFFF"/>
+                            
+                            <!-- Shoulder measurement line -->
+                            <line x1="45" y1="115" x2="155" y2="115" stroke="#FF4444" stroke-width="2.5"/>
+                            <circle cx="45" cy="115" r="4.5" fill="#FF4444"/>
+                            <circle cx="155" cy="115" r="4.5" fill="#FF4444"/>
+                            
+                            <!-- Arms -->
+                            <rect x="50" y="105" width="14" height="75" rx="7" fill="#FFDBAC"/>
+                            <rect x="136" y="105" width="14" height="75" rx="7" fill="#FFDBAC"/>
+                            
+                            <!-- Torso (White T-shirt) -->
+                            <path d="M 65 135 L 65 215 Q 65 220, 70 220 L 130 220 Q 135 220, 135 215 L 135 135" fill="#FFFFFF"/>
+                            
+                            <!-- Waist measurement line -->
+                            <line x1="52" y1="175" x2="148" y2="175" stroke="#FF4444" stroke-width="2.5"/>
+                            <circle cx="52" cy="175" r="4.5" fill="#FF4444"/>
+                            <circle cx="148" cy="175" r="4.5" fill="#FF4444"/>
+                            
+                            <!-- Lower Body (Black shorts) -->
+                            <rect x="72" y="220" width="26" height="85" rx="4" fill="#2C2C2C"/>
+                            <rect x="102" y="220" width="26" height="85" rx="4" fill="#2C2C2C"/>
+                            
+                            <!-- Hip measurement line -->
+                            <line x1="58" y1="240" x2="142" y2="240" stroke="#FF4444" stroke-width="2.5"/>
+                            <circle cx="58" cy="240" r="4.5" fill="#FF4444"/>
+                            <circle cx="142" cy="240" r="4.5" fill="#FF4444"/>
+                            
+                            <!-- Legs extension -->
+                            <rect x="74" y="305" width="22" height="35" fill="#FFDBAC"/>
+                            <rect x="104" y="305" width="22" height="35" fill="#FFDBAC"/>
+                            
+                            <!-- Shoes -->
+                            <ellipse cx="85" cy="350" rx="18" ry="10" fill="#1C1C1C"/>
+                            <ellipse cx="115" cy="350" rx="18" ry="10" fill="#1C1C1C"/>
+                            <ellipse cx="85" cy="348" rx="16" ry="7" fill="#3C3C3C"/>
+                            <ellipse cx="115" cy="348" rx="16" ry="7" fill="#3C3C3C"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+            </div>
+            <form id="editProfileForm" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editFullName">Full Name</label>
+                        <input type="text" id="editFullName" name="full_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUsername">Username</label>
+                        <input type="text" id="editUsername" name="username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editGender">Gender</label>
+                        <select id="editGender" name="gender">
+                            <option value="">Select...</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAge">Age</label>
+                        <input type="number" id="editAge" name="age" min="1" max="120">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editHeight">Height (cm)</label>
+                        <input type="number" id="editHeight" name="height" step="0.1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="editWeight">Weight (kg)</label>
+                        <input type="number" id="editWeight" name="weight" step="0.1" min="1">
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditProfileModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

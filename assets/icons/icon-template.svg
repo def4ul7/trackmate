@@ -1,0 +1,22 @@
+<!-- TrackMate Icon Generation Template -->
+<!-- You can use an online tool like https://realfavicongenerator.net/ to generate all icon sizes -->
+<!-- Or create them manually using this SVG as the base -->
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="512" height="512" rx="100" fill="url(#gradient)"/>
+    
+    <!-- Logo Pattern -->
+    <rect x="85" y="85" width="162" height="162" rx="30" fill="#FFFFFF" opacity="0.9"/>
+    <rect x="265" y="85" width="162" height="162" rx="30" fill="#9CDDDD"/>
+    <rect x="85" y="265" width="162" height="162" rx="30" fill="#9CDDDD"/>
+    <rect x="265" y="265" width="162" height="162" rx="30" fill="#FFFFFF" opacity="0.9"/>
+    
+    <!-- Gradient Definition -->
+    <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FF9F66;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FF9F66;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+</svg>

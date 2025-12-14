@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF9F66">
+    <meta name="description" content="TrackMate - Backup Codes">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Backup Codes - TrackMate</title>
+    <link rel="stylesheet" href="assets/css/auth-style.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .settings-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px var(--shadow);
+        }
+        
+        .settings-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .settings-header h1 {
+            font-size: 32px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .settings-header p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-orange);
+        }
+        
+        .codes-section {
+            margin-top: 30px;
+        }
+        
+        .codes-info {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .codes-info h3 {
+            color: var(--text-dark);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .codes-info p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <a href="dashboard.html" class="back-button">
+            <span>←</span> Back to Dashboard
+        </a>
+        
+        <div class="settings-card">
+            <div class="settings-header">
+                <h1>🔐 Backup Recovery Codes</h1>
+                <p>Use these codes to recover your account if you forget your password</p>
+            </div>
+            
+            <div class="alert" id="alertBox" style="display: none;"></div>
+            
+            <div class="codes-info">
+                <h3>What are backup codes?</h3>
+                <p>Backup codes are one-time passwords that allow you to access your account if you forget your password. Each code can only be used once.</p>
+            </div>
+            
+            <div class="codes-section" id="codesSection">
+                <button onclick="generateNewCodes()" class="btn btn-primary">
+                    <span class="btn-text">Generate Backup Codes</span>
+                    <span class="loader" style="display: none;"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script>
+        // Check if user is logged in
+        const user = checkAuth();
+        
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+        
+        async function generateNewCodes() {
+            if (!confirm('This will invalidate your old backup codes and generate new ones. Continue?')) {
+                return;
+            }
+            
+            const btnText = document.querySelector('.btn-text');
+            const loader = document.querySelector('.loader');
+            
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            
+            const result = await makeRequest('generate-backup-codes.php', 'POST', {
+                user_id: user.user_id
+            });
+            
+            btnText.style.display = 'block';
+            loader.style.display = 'none';
+            
+            if (result.success && result.codes) {
+                showBackupCodes(result.codes);
+            } else {
+                showAlert(result.message || 'Failed to generate backup codes', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
