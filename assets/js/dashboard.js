@@ -387,5 +387,152 @@ window.addEventListener('focus', () => {
     }
 });
 
+// Notification System
+let notifications = [];
+
+// Load notifications from localStorage or use sample data
+function loadNotifications() {
+    const stored = localStorage.getItem('trackmate_notifications');
+    if (stored) {
+        notifications = JSON.parse(stored);
+    } else {
+        // Sample notifications
+        notifications = [
+            {
+                id: 1,
+                type: 'success',
+                icon: '✅',
+                title: 'Goal Achieved!',
+                message: 'You completed your 8-hour work goal today.',
+                time: '5 minutes ago',
+                unread: true
+            },
+            {
+                id: 2,
+                type: 'warning',
+                icon: '⏰',
+                title: 'Break Time',
+                message: 'You\'ve been working for 2 hours. Time for a break!',
+                time: '15 minutes ago',
+                unread: true
+            },
+            {
+                id: 3,
+                type: 'info',
+                icon: '📊',
+                title: 'Weekly Report Ready',
+                message: 'Your weekly activity report is now available.',
+                time: '1 hour ago',
+                unread: true
+            },
+            {
+                id: 4,
+                type: 'alert',
+                icon: '📱',
+                title: 'Phone Usage Alert',
+                message: 'High phone usage detected during work hours.',
+                time: '2 hours ago',
+                unread: false
+            },
+            {
+                id: 5,
+                type: 'success',
+                icon: '🎯',
+                title: 'Streak Milestone',
+                message: 'Congratulations! 7-day streak achieved!',
+                time: 'Yesterday',
+                unread: false
+            }
+        ];
+        saveNotifications();
+    }
+    updateNotificationUI();
+}
+
+function saveNotifications() {
+    localStorage.setItem('trackmate_notifications', JSON.stringify(notifications));
+}
+
+function updateNotificationUI() {
+    const notificationList = document.getElementById('notificationList');
+    const badge = document.getElementById('notificationBadge');
+    
+    if (!notificationList) return;
+    
+    // Update badge count
+    const unreadCount = notifications.filter(n => n.unread).length;
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+    
+    // Render notifications
+    if (notifications.length === 0) {
+        notificationList.innerHTML = `
+            <div class="notification-empty">
+                <div class="notification-empty-icon">🔔</div>
+                <div class="notification-empty-text">No notifications yet</div>
+            </div>
+        `;
+    } else {
+        notificationList.innerHTML = notifications.map(notif => `
+            <div class="notification-item ${notif.unread ? 'unread' : ''}" onclick="markAsRead(${notif.id})">
+                <div class="notification-icon ${notif.type}">
+                    ${notif.icon}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notif.title}</div>
+                    <div class="notification-message">${notif.message}</div>
+                    <div class="notification-time">${notif.time}</div>
+                </div>
+                ${notif.unread ? '<div class="notification-dot"></div>' : ''}
+            </div>
+        `).join('');
+    }
+}
+
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    dropdown.classList.toggle('active');
+}
+
+function markAsRead(id) {
+    const notif = notifications.find(n => n.id === id);
+    if (notif) {
+        notif.unread = false;
+        saveNotifications();
+        updateNotificationUI();
+    }
+}
+
+function markAllAsRead() {
+    notifications.forEach(n => n.unread = false);
+    saveNotifications();
+    updateNotificationUI();
+}
+
+function viewAllNotifications() {
+    // Could navigate to a dedicated notifications page
+    alert('All notifications view - Coming soon!');
+    toggleNotifications();
+}
+
+// Close notifications when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('notificationDropdown');
+    const btn = document.getElementById('notificationBtn');
+    
+    if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+// Load notifications on page load
+loadNotifications();
+
 // Refresh chart on window resize (removed, Chart.js handles this)
 

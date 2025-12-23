@@ -73,11 +73,28 @@
             
             <div class="header-right">
                 <button class="icon-btn">🔍</button>
-                <button class="icon-btn">🔔</button>
+                <button class="icon-btn notification-btn" id="notificationBtn" onclick="toggleNotifications()">
+                    🔔
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                </button>
                 <a href="profile.html" class="icon-btn" title="View Profile">👤</a>
                 <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
             </div>
         </header>
+        
+        <!-- Notification Dropdown -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h3>Notifications</h3>
+                <button class="mark-all-read" onclick="markAllAsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <!-- Notifications will be loaded here -->
+            </div>
+            <div class="notification-footer">
+                <a href="#" onclick="viewAllNotifications()">View all notifications</a>
+            </div>
+        </div>
         
         <!-- Dashboard Grid -->
         <div class="dashboard-grid">
