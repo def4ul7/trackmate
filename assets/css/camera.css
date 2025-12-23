@@ -467,6 +467,25 @@ input:checked + .toggle-slider:before {
     transform: translateX(24px);
 }
 
+/* Detection Status Styles */
+.detection-status {
+    font-weight: 500;
+    padding: 0.5rem 0;
+}
+
+.detection-status.analyzing {
+    color: #FF9F66;
+}
+
+.detection-status.detected {
+    color: #48BB78;
+    font-weight: 600;
+}
+
+.detection-status.error {
+    color: #E53E3E;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .camera-grid {

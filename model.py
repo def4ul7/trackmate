@@ -16,8 +16,8 @@ import re
 
 app = Flask(__name__)
 
-# Ollama API endpoint
-OLLAMA_API = "http://100.105.118.56:11433/api/generate"
+# Ollama API endpoint - Change this if your Ollama runs on different host/port
+OLLAMA_API = "http://localhost:11434/api/generate"
 MODEL_NAME = "llava:7b"
 
 # Timeout settings

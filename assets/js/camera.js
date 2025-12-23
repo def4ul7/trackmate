@@ -17,6 +17,9 @@ let cameraStream = null;
 let isRecording = false;
 let mediaRecorder = null;
 let recordedChunks = [];
+let aiDetectionInterval = null;
+let isAnalyzing = false;
+let lastActivity = 'No activity detected yet';
 
 // Update date
 function updateDate() {
@@ -64,6 +67,11 @@ async function startCamera() {
         // Add log entry
         addLogEntry('Camera monitoring started', '📷');
         
+        // Start AI detection if enabled
+        if (document.getElementById('motionDetection').checked) {
+            startAIDetection();
+        }
+        
     } catch (error) {
         console.error('Error accessing camera:', error);
         alert('Unable to access camera. Please check permissions and try again.');
@@ -101,6 +109,9 @@ function stopCamera() {
         if (isRecording) {
             toggleRecording();
         }
+        
+        // Stop AI detection
+        stopAIDetection();
         
         addLogEntry('Camera monitoring stopped', '📷');
     }
@@ -265,6 +276,98 @@ document.getElementById('cameraToggle')?.addEventListener('change', (e) => {
         stopCamera();
     }
 });
+
+// AI Detection toggle
+document.getElementById('motionDetection')?.addEventListener('change', (e) => {
+    if (e.target.checked && cameraStream) {
+        startAIDetection();
+    } else {
+        stopAIDetection();
+    }
+});
+
+// Start AI detection
+function startAIDetection() {
+    if (aiDetectionInterval) return; // Already running
+    
+    addLogEntry('AI activity detection enabled', '🤖');
+    
+    // Analyze frame every 10 seconds
+    aiDetectionInterval = setInterval(() => {
+        analyzeCurrentFrame();
+    }, 10000);
+    
+    // Analyze first frame immediately
+    analyzeCurrentFrame();
+}
+
+// Stop AI detection
+function stopAIDetection() {
+    if (aiDetectionInterval) {
+        clearInterval(aiDetectionInterval);
+        aiDetectionInterval = null;
+        addLogEntry('AI activity detection disabled', '🤖');
+    }
+}
+
+// Analyze current camera frame with AI
+async function analyzeCurrentFrame() {
+    if (!cameraStream || isAnalyzing) return;
+    
+    isAnalyzing = true;
+    
+    try {
+        const videoElement = document.getElementById('cameraFeed');
+        const canvas = document.createElement('canvas');
+        canvas.width = 320; // Smaller size for faster processing
+        canvas.height = 240;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to base64
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Show analyzing status
+        updateDetectionStatus('Analyzing...', 'analyzing');
+        
+        // Send to API
+        const response = await fetch('api/analyze-activity.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: imageData })
+        });
+        
+        const result = await response.json();
+        
+        if (result.error) {
+            console.error('AI Error:', result.error);
+            updateDetectionStatus('AI Error: ' + (result.message || result.error), 'error');
+            addLogEntry('AI detection error', '⚠️');
+        } else {
+            lastActivity = result.activity;
+            updateDetectionStatus(result.activity, 'detected');
+            addLogEntry(`Detected: ${result.activity}`, '🔍');
+        }
+        
+    } catch (error) {
+        console.error('Analysis error:', error);
+        updateDetectionStatus('Connection error - Make sure Python server is running', 'error');
+    } finally {
+        isAnalyzing = false;
+    }
+}
+
+// Update detection status display
+function updateDetectionStatus(text, status) {
+    const statusElement = document.getElementById('detectionStatus');
+    if (statusElement) {
+        statusElement.textContent = text;
+        statusElement.className = 'detection-status ' + status;
+    }
+}
 
 // Logout function
 function logout() {
