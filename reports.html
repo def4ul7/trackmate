@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF9F66">
+    <meta name="description" content="TrackMate Reports - View your activity reports">
+    
+    <title>Reports - TrackMate</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/reports.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="20" height="20" rx="4" fill="#FF9F66"/>
+                <rect x="30" y="5" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="5" y="30" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                <rect x="30" y="30" width="20" height="20" rx="4" fill="#FF9F66"/>
+            </svg>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">📊</span>
+            </a>
+            <a href="calendar.html" class="nav-item">
+                <span class="icon">📅</span>
+            </a>
+            <a href="camera.html" class="nav-item">
+                <span class="icon">📷</span>
+            </a>
+            <a href="timer.html" class="nav-item">
+                <span class="icon">⏰</span>
+            </a>
+            <a href="reports.html" class="nav-item active">
+                <span class="icon">📈</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="icon">⚙️</span>
+            </a>
+        </nav>
+        
+        <a href="profile.html" class="nav-item profile-icon">
+            <span class="icon">👤</span>
+        </a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="5" y="5" width="20" height="20" rx="4" fill="#FF9F66"/>
+                        <rect x="30" y="5" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                        <rect x="5" y="30" width="20" height="20" rx="4" fill="#9CDDDD"/>
+                        <rect x="30" y="30" width="20" height="20" rx="4" fill="#FF9F66"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="header-title">TrackMate - Activity Reports</h1>
+                    <p class="header-date" id="currentDate">December 24, 2025</p>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="icon-btn">🔍</button>
+                <button class="icon-btn">🔔</button>
+                <a href="profile.html" class="icon-btn" title="View Profile">👤</a>
+                <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
+            </div>
+        </header>
+        
+        <!-- Reports Content -->
+        <div class="reports-container">
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon">📱</div>
+                    <div class="card-info">
+                        <div class="card-label">Phone Usage</div>
+                        <div class="card-value">3.2 <span>hours</span></div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">💻</div>
+                    <div class="card-info">
+                        <div class="card-label">Work Time</div>
+                        <div class="card-value">6.5 <span>hours</span></div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">😴</div>
+                    <div class="card-info">
+                        <div class="card-label">Sleep</div>
+                        <div class="card-value">7.8 <span>hours</span></div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">🏃</div>
+                    <div class="card-info">
+                        <div class="card-label">Total Activities</div>
+                        <div class="card-value">24 <span>logged</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Tabs -->
+            <div class="report-tabs">
+                <button class="tab-btn active" onclick="showReportTab('daily')">Daily</button>
+                <button class="tab-btn" onclick="showReportTab('weekly')">Weekly</button>
+                <button class="tab-btn" onclick="showReportTab('monthly')">Monthly</button>
+                <button class="tab-btn" onclick="showReportTab('yearly')">Yearly</button>
+            </div>
+            
+            <!-- Daily Report -->
+            <div id="dailyReport" class="report-section active">
+                <div class="report-header">
+                    <h2>Daily Report</h2>
+                    <div class="date-selector">
+                        <button class="date-nav-btn" onclick="navigateDate('daily', -1)">◀</button>
+                        <input type="date" id="dailyDate" onchange="loadDailyReport()">
+                        <button class="date-nav-btn" onclick="navigateDate('daily', 1)">▶</button>
+                    </div>
+                </div>
+                
+                <div class="report-grid">
+                    <!-- Chart Card -->
+                    <div class="chart-card">
+                        <h3>Activity Breakdown</h3>
+                        <div class="chart-container">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity List -->
+                    <div class="activity-list-card">
+                        <h3>Today's Activities</h3>
+                        <div class="activities-list" id="dailyActivities">
+                            <div class="activity-item">
+                                <div class="activity-time">08:00 - 09:30</div>
+                                <div class="activity-info">
+                                    <span class="activity-icon">💻</span>
+                                    <span class="activity-name">Working</span>
+                                </div>
+                                <div class="activity-duration">1.5h</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-time">09:30 - 09:45</div>
+                                <div class="activity-info">
+                                    <span class="activity-icon">☕</span>
+                                    <span class="activity-name">Break</span>
+                                </div>
+                                <div class="activity-duration">15m</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-time">09:45 - 12:00</div>
+                                <div class="activity-info">
+                                    <span class="activity-icon">💻</span>
+                                    <span class="activity-name">Working</span>
+                                </div>
+                                <div class="activity-duration">2.25h</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-time">12:00 - 13:00</div>
+                                <div class="activity-info">
+                                    <span class="activity-icon">🍽️</span>
+                                    <span class="activity-name">Lunch</span>
+                                </div>
+                                <div class="activity-duration">1h</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-time">13:00 - 15:30</div>
+                                <div class="activity-info">
+                                    <span class="activity-icon">💻</span>
+                                    <span class="activity-name">Working</span>
+                                </div>
+                                <div class="activity-duration">2.5h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Most Active Hour</div>
+                        <div class="stat-value">2:00 PM - 3:00 PM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Productive Time</div>
+                        <div class="stat-value">6.5 hours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value">12 activities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Focus Score</div>
+                        <div class="stat-value">85%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weekly Report -->
+            <div id="weeklyReport" class="report-section">
+                <div class="report-header">
+                    <h2>Weekly Report</h2>
+                    <div class="date-selector">
+                        <button class="date-nav-btn" onclick="navigateDate('weekly', -1)">◀</button>
+                        <input type="week" id="weeklyDate" onchange="loadWeeklyReport()">
+                        <button class="date-nav-btn" onclick="navigateDate('weekly', 1)">▶</button>
+                    </div>
+                </div>
+                
+                <div class="report-grid">
+                    <div class="chart-card">
+                        <h3>Weekly Activity Trends</h3>
+                        <div class="chart-container">
+                            <canvas id="weeklyChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-list-card">
+                        <h3>Week Summary</h3>
+                        <div class="week-summary">
+                            <div class="summary-item">
+                                <div class="summary-day">Monday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 85%"></div>
+                                </div>
+                                <div class="summary-hours">8.5h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Tuesday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 90%"></div>
+                                </div>
+                                <div class="summary-hours">9.0h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Wednesday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 75%"></div>
+                                </div>
+                                <div class="summary-hours">7.5h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Thursday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 80%"></div>
+                                </div>
+                                <div class="summary-hours">8.0h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Friday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 70%"></div>
+                                </div>
+                                <div class="summary-hours">7.0h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Saturday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 40%"></div>
+                                </div>
+                                <div class="summary-hours">4.0h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-day">Sunday</div>
+                                <div class="summary-bar">
+                                    <div class="bar-fill" style="width: 35%"></div>
+                                </div>
+                                <div class="summary-hours">3.5h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Average Daily Hours</div>
+                        <div class="stat-value">6.8 hours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Most Productive Day</div>
+                        <div class="stat-value">Tuesday</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value">89 activities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Weekly Goal</div>
+                        <div class="stat-value">95% Achieved</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Monthly Report -->
+            <div id="monthlyReport" class="report-section">
+                <div class="report-header">
+                    <h2>Monthly Report</h2>
+                    <div class="date-selector">
+                        <button class="date-nav-btn" onclick="navigateDate('monthly', -1)">◀</button>
+                        <input type="month" id="monthlyDate" onchange="loadMonthlyReport()">
+                        <button class="date-nav-btn" onclick="navigateDate('monthly', 1)">▶</button>
+                    </div>
+                </div>
+                
+                <div class="report-grid">
+                    <div class="chart-card large">
+                        <h3>Monthly Overview</h3>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Work Hours</div>
+                        <div class="stat-value">168 hours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Phone Usage</div>
+                        <div class="stat-value">89 hours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value">387 activities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Daily Score</div>
+                        <div class="stat-value">82%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Yearly Report -->
+            <div id="yearlyReport" class="report-section">
+                <div class="report-header">
+                    <h2>Yearly Report</h2>
+                    <div class="date-selector">
+                        <button class="date-nav-btn" onclick="navigateDate('yearly', -1)">◀</button>
+                        <select id="yearlyDate" onchange="loadYearlyReport()">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                        <button class="date-nav-btn" onclick="navigateDate('yearly', 1)">▶</button>
+                    </div>
+                </div>
+                
+                <div class="report-grid">
+                    <div class="chart-card large">
+                        <h3>Year in Review</h3>
+                        <div class="chart-container">
+                            <canvas id="yearlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Work Hours</div>
+                        <div class="stat-value">2,016 hours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Most Productive Month</div>
+                        <div class="stat-value">September</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value">4,523 activities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Year Achievement</div>
+                        <div class="stat-value">89%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Export Button -->
+            <div class="report-actions">
+                <button class="btn-export" onclick="exportReport()">
+                    <span>📥</span> Export Report
+                </button>
+                <button class="btn-export" onclick="printReport()">
+                    <span>🖨️</span> Print Report
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/reports.js"></script>
+</body>
+</html>
