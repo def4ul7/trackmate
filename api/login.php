@@ -35,7 +35,7 @@ try {
     $conn = getDBConnection();
     
     // Get user by email - fetch all user data
-    $stmt = $conn->prepare("SELECT id, username, email, password, full_name, gender, age, height, weight, membership_type, is_active FROM users WHERE email = :email");
+    $stmt = $conn->prepare("SELECT id, username, email, password, full_name, profile_image, gender, age, height, weight, membership_type, is_active FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch();
     
@@ -90,6 +90,7 @@ try {
             'username' => $user['username'],
             'email' => $user['email'],
             'full_name' => $user['full_name'],
+            'profile_image' => $user['profile_image'],
             'gender' => $user['gender'],
             'age' => $user['age'],
             'height' => $user['height'],

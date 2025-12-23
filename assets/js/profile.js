@@ -30,8 +30,26 @@ function loadProfileData() {
         profileEmail.textContent = user.email || 'email@example.com';
     }
     
+    // Load profile image if exists
+    loadProfileImage();
+    
     // Load additional user data
     loadUserDetails();
+}
+
+// Load profile image
+function loadProfileImage() {
+    const avatarImage = document.getElementById('avatarImage');
+    const avatarEmoji = document.getElementById('avatarEmoji');
+    
+    if (user.profile_image) {
+        avatarImage.src = user.profile_image;
+        avatarImage.style.display = 'block';
+        avatarEmoji.style.display = 'none';
+    } else {
+        avatarImage.style.display = 'none';
+        avatarEmoji.style.display = 'block';
+    }
 }
 
 // Load user details (gender, age, height, weight)
@@ -72,7 +90,93 @@ function logoutUser() {
 
 // Edit avatar
 document.querySelector('.edit-avatar-btn')?.addEventListener('click', () => {
-    alert('Avatar upload functionality coming soon!');
+    document.getElementById('avatarInput').click();
+});
+
+// Handle avatar upload
+document.getElementById('avatarInput')?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB.');
+        return;
+    }
+    
+    const avatarImage = document.getElementById('avatarImage');
+    const avatarEmoji = document.getElementById('avatarEmoji');
+    const avatarCircle = document.getElementById('avatarCircle');
+    const editBtn = document.getElementById('editAvatarBtn');
+    
+    // Show loading state
+    const originalBtnText = editBtn.textContent;
+    editBtn.textContent = '⏳';
+    editBtn.disabled = true;
+    avatarCircle.style.opacity = '0.6';
+    
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        avatarImage.src = e.target.result;
+        avatarImage.style.display = 'block';
+        avatarEmoji.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+    
+    // Upload to server
+    const formData = new FormData();
+    formData.append('profile_image', file);
+    
+    try {
+        const response = await fetch('api/upload-profile-image.php', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update user data in localStorage
+            user.profile_image = result.image_path;
+            localStorage.setItem('trackmate_user', JSON.stringify(user));
+            
+            // Load the processed image from server
+            avatarImage.src = result.image_path + '?t=' + new Date().getTime();
+            
+            // Show success feedback
+            avatarCircle.style.opacity = '1';
+            editBtn.textContent = '✓';
+            setTimeout(() => {
+                editBtn.textContent = originalBtnText;
+            }, 2000);
+        } else {
+            console.error('Upload failed:', result);
+            alert('Upload failed: ' + (result.message || 'Unknown error'));
+            // Revert to previous state
+            loadProfileImage();
+            avatarCircle.style.opacity = '1';
+            editBtn.textContent = originalBtnText;
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('Network error: Could not connect to server. Please check your connection and try again.');
+        // Revert to previous state
+        loadProfileImage();
+        avatarCircle.style.opacity = '1';
+        editBtn.textContent = originalBtnText;
+    } finally {
+        editBtn.disabled = false;
+        // Reset file input
+        e.target.value = '';
+    }
 });
 
 // Delete account

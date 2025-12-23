@@ -31,6 +31,7 @@ function updateGreeting() {
     const profileNameEl = document.getElementById('profileName');
     const profileEmailEl = document.getElementById('profileEmail');
     const avatarTextEl = document.getElementById('avatarText');
+    const avatarCircleEl = document.querySelector('.sidebar-right .avatar-circle');
     
     if (user) {
         const name = user.full_name ? user.full_name.split(' ')[0] : user.username;
@@ -47,9 +48,25 @@ function updateGreeting() {
             profileEmailEl.textContent = user.email || 'user@trackmate.com';
         }
         
-        if (avatarTextEl) {
-            const initial = (user.full_name || user.username).charAt(0).toUpperCase();
-            avatarTextEl.textContent = initial;
+        // Update avatar - show image if available, otherwise show initial
+        if (avatarCircleEl) {
+            if (user.profile_image) {
+                // Clear existing content
+                avatarCircleEl.innerHTML = '';
+                // Create and add image
+                const img = document.createElement('img');
+                img.src = user.profile_image + '?t=' + new Date().getTime(); // Add cache buster
+                img.alt = 'Profile';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '50%';
+                avatarCircleEl.appendChild(img);
+            } else {
+                // Show initial if no image
+                const initial = (user.full_name || user.username).charAt(0).toUpperCase();
+                avatarCircleEl.innerHTML = `<div class="avatar-text" id="avatarText">${initial}</div>`;
+            }
         }
     }
 }
@@ -333,6 +350,27 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => openEditProfileModal(), 300);
         // Clean URL
         window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+
+// Reload user data when page becomes visible (e.g., coming back from profile page)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        // Reload user data from localStorage
+        const userData = localStorage.getItem('trackmate_user');
+        if (userData) {
+            user = JSON.parse(userData);
+            updateGreeting();
+        }
+    }
+});
+
+// Also reload when window gets focus
+window.addEventListener('focus', () => {
+    const userData = localStorage.getItem('trackmate_user');
+    if (userData) {
+        user = JSON.parse(userData);
+        updateGreeting();
     }
 });
 

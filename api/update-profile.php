@@ -107,7 +107,7 @@ try {
     if ($stmt->execute($updateFields)) {
         // Fetch updated user data
         $userStmt = $conn->prepare("
-            SELECT id, username, email, full_name, gender, age, height, weight, 
+            SELECT id, username, email, full_name, profile_image, gender, age, height, weight, 
                    membership_type, created_at 
             FROM users 
             WHERE id = :user_id

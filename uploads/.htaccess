@@ -1,0 +1,11 @@
+# Allow image access
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Deny access to other files
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|webp)$).*$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>

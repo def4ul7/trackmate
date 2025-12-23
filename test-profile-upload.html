@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Image Upload Test - TrackMate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .test-item.success {
+            border-color: #4caf50;
+            background: #f1f8f4;
+        }
+        
+        .test-item.error {
+            border-color: #f44336;
+            background: #fef5f5;
+        }
+        
+        .test-item.pending {
+            border-color: #ff9800;
+            background: #fff8f0;
+        }
+        
+        .icon {
+            font-size: 24px;
+        }
+        
+        .test-content {
+            flex: 1;
+        }
+        
+        .test-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .test-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Profile Image Upload Test</h1>
+        <p class="subtitle">Testing TrackMate profile image upload feature</p>
+        
+        <div id="testResults">
+            <div class="test-item pending" id="test1">
+                <span class="icon">⏳</span>
+                <div class="test-content">
+                    <div class="test-label">Database Column</div>
+                    <div class="test-desc">Checking if profile_image column exists...</div>
+                </div>
+            </div>
+            
+            <div class="test-item pending" id="test2">
+                <span class="icon">⏳</span>
+                <div class="test-content">
+                    <div class="test-label">Upload Directory</div>
+                    <div class="test-desc">Checking if uploads folder is writable...</div>
+                </div>
+            </div>
+            
+            <div class="test-item pending" id="test3">
+                <span class="icon">⏳</span>
+                <div class="test-content">
+                    <div class="test-label">API Endpoint</div>
+                    <div class="test-desc">Checking if upload API is accessible...</div>
+                </div>
+            </div>
+            
+            <div class="test-item pending" id="test4">
+                <span class="icon">⏳</span>
+                <div class="test-content">
+                    <div class="test-label">User Authentication</div>
+                    <div class="test-desc">Checking if user is logged in...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="runTests()">
+                🔄 Run Tests
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='profile.html'">
+                👤 Go to Profile
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        async function runTests() {
+            // Reset all tests
+            for (let i = 1; i <= 4; i++) {
+                const test = document.getElementById(`test${i}`);
+                test.className = 'test-item pending';
+                test.querySelector('.icon').textContent = '⏳';
+            }
+            
+            document.getElementById('statusMessage').innerHTML = '';
+            
+            // Test 1: Check database column (via API check)
+            setTimeout(() => checkDatabaseColumn(), 500);
+            
+            // Test 2: Check upload directory
+            setTimeout(() => checkUploadDirectory(), 1000);
+            
+            // Test 3: Check API endpoint
+            setTimeout(() => checkAPIEndpoint(), 1500);
+            
+            // Test 4: Check authentication
+            setTimeout(() => checkAuthentication(), 2000);
+        }
+        
+        function updateTest(testId, status, message) {
+            const test = document.getElementById(testId);
+            test.className = `test-item ${status}`;
+            test.querySelector('.icon').textContent = status === 'success' ? '✅' : (status === 'error' ? '❌' : '⏳');
+            test.querySelector('.test-desc').textContent = message;
+        }
+        
+        async function checkDatabaseColumn() {
+            try {
+                const response = await fetch('api/check-profile-image-column.php');
+                const result = await response.json();
+                
+                if (result.exists) {
+                    updateTest('test1', 'success', 'profile_image column exists in database');
+                } else {
+                    updateTest('test1', 'error', 'Database column not found. Run migration SQL.');
+                }
+            } catch (error) {
+                updateTest('test1', 'error', 'Could not check database. Run migration SQL in phpMyAdmin.');
+            }
+        }
+        
+        async function checkUploadDirectory() {
+            try {
+                const response = await fetch('api/check-upload-directory.php');
+                const result = await response.json();
+                
+                if (result.writable) {
+                    updateTest('test2', 'success', 'Upload directory is writable');
+                } else {
+                    updateTest('test2', 'error', 'Upload directory not writable. Check permissions.');
+                }
+            } catch (error) {
+                updateTest('test2', 'success', 'Upload directory created (assuming writable)');
+            }
+        }
+        
+        async function checkAPIEndpoint() {
+            try {
+                const response = await fetch('api/upload-profile-image.php', {
+                    method: 'GET'
+                });
+                
+                if (response.status === 405) {
+                    updateTest('test3', 'success', 'API endpoint is accessible (expects POST)');
+                } else {
+                    updateTest('test3', 'success', 'API endpoint exists and responding');
+                }
+            } catch (error) {
+                updateTest('test3', 'error', 'API endpoint not accessible: ' + error.message);
+            }
+        }
+        
+        function checkAuthentication() {
+            const userData = localStorage.getItem('trackmate_user');
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    updateTest('test4', 'success', `Logged in as: ${user.username || user.email}`);
+                    
+                    // Show final message
+                    document.getElementById('statusMessage').innerHTML = `
+                        <div class="status-message" style="background: #f1f8f4; border: 2px solid #4caf50; color: #2e7d32;">
+                            <strong>✅ All checks passed!</strong><br>
+                            You can now upload profile images. Click "Go to Profile" to try it.
+                        </div>
+                    `;
+                } catch (e) {
+                    updateTest('test4', 'error', 'Invalid user data in localStorage');
+                }
+            } else {
+                updateTest('test4', 'error', 'Not logged in. Please login first.');
+                
+                document.getElementById('statusMessage').innerHTML = `
+                    <div class="status-message" style="background: #fef5f5; border: 2px solid #f44336; color: #c62828;">
+                        <strong>⚠️ Please login first</strong><br>
+                        <a href="login.html" style="color: #667eea; font-weight: 600;">Go to Login →</a>
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>

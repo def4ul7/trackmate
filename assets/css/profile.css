@@ -55,10 +55,31 @@
     justify-content: center;
     border: 4px solid var(--white);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.avatar-circle:hover {
+    transform: scale(1.05);
 }
 
 .avatar-emoji {
     font-size: 60px;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transition: opacity 0.3s ease;
 }
 
 .edit-avatar-btn {
@@ -72,11 +93,20 @@
     border: 3px solid var(--white);
     font-size: 16px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .edit-avatar-btn:hover {
     transform: scale(1.1);
+    background: #FF8C4D;
+}
+
+.edit-avatar-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .profile-info {

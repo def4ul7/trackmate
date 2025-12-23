@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-box {
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Image Upload Test</h1>
+    
+    <div class="test-box">
+        <h3>Test 1: Check if logged in</h3>
+        <p id="loginStatus">Checking...</p>
+    </div>
+    
+    <div class="test-box">
+        <h3>Test 2: Upload Image</h3>
+        <input type="file" id="fileInput" accept="image/*">
+        <br>
+        <button onclick="testUpload()">Upload Test Image</button>
+        <div id="result"></div>
+    </div>
+    
+    <div class="test-box">
+        <h3>Test 3: API Path Test</h3>
+        <button onclick="testApiPath()">Test API Endpoint</button>
+        <div id="apiResult"></div>
+    </div>
+    
+    <script>
+        // Check login status
+        const userData = localStorage.getItem('trackmate_user');
+        const loginStatusEl = document.getElementById('loginStatus');
+        
+        if (userData) {
+            const user = JSON.parse(userData);
+            loginStatusEl.innerHTML = `✅ Logged in as: ${user.username || user.email}`;
+            loginStatusEl.style.color = 'green';
+        } else {
+            loginStatusEl.innerHTML = '❌ Not logged in. <a href="login.html">Please login first</a>';
+            loginStatusEl.style.color = 'red';
+        }
+        
+        async function testApiPath() {
+            const resultEl = document.getElementById('apiResult');
+            resultEl.innerHTML = 'Testing...';
+            
+            try {
+                console.log('Testing API path...');
+                const response = await fetch('api/upload-profile-image.php', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                console.log('Response status:', response.status);
+                const text = await response.text();
+                console.log('Response:', text);
+                
+                resultEl.innerHTML = `
+                    <strong>Status:</strong> ${response.status}<br>
+                    <strong>Response:</strong> ${text.substring(0, 200)}
+                `;
+                resultEl.className = 'success';
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultEl.innerHTML = `
+                    <strong>Error:</strong> ${error.message}<br>
+                    <strong>Type:</strong> ${error.name}
+                `;
+                resultEl.className = 'error';
+            }
+        }
+        
+        async function testUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const resultEl = document.getElementById('result');
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a file first');
+                return;
+            }
+            
+            resultEl.innerHTML = 'Uploading...';
+            resultEl.className = '';
+            
+            const formData = new FormData();
+            formData.append('profile_image', fileInput.files[0]);
+            
+            console.log('File selected:', fileInput.files[0].name);
+            console.log('Sending to: api/upload-profile-image.php');
+            
+            try {
+                const response = await fetch('api/upload-profile-image.php', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const text = await response.text();
+                console.log('Raw response:', text);
+                
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    result = { success: false, message: 'Invalid JSON response', raw: text };
+                }
+                
+                resultEl.innerHTML = `
+                    <strong>Status:</strong> ${response.status}<br>
+                    <strong>Success:</strong> ${result.success ? 'Yes ✅' : 'No ❌'}<br>
+                    <strong>Message:</strong> ${result.message || 'No message'}<br>
+                    <strong>Image Path:</strong> ${result.image_path || 'N/A'}<br>
+                    ${result.raw ? `<br><strong>Raw:</strong> ${result.raw.substring(0, 200)}` : ''}
+                `;
+                resultEl.className = result.success ? 'success' : 'error';
+                
+                if (result.success && result.image_path) {
+                    resultEl.innerHTML += `<br><br><img src="${result.image_path}" style="width: 100px; height: 100px; border-radius: 50%;" />`;
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                resultEl.innerHTML = `
+                    <strong>Network Error:</strong><br>
+                    ${error.message}<br>
+                    <br>
+                    <strong>Error Type:</strong> ${error.name}<br>
+                    <strong>Stack:</strong> ${error.stack ? error.stack.substring(0, 200) : 'N/A'}
+                `;
+                resultEl.className = 'error';
+            }
+        }
+        
+        // Log page load
+        console.log('Test page loaded');
+        console.log('Current URL:', window.location.href);
+        console.log('Base URL:', window.location.origin);
+    </script>
+</body>
+</html>
