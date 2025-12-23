@@ -31,7 +31,12 @@ function updateGreeting() {
     const profileNameEl = document.getElementById('profileName');
     const profileEmailEl = document.getElementById('profileEmail');
     const avatarTextEl = document.getElementById('avatarText');
-    const avatarCircleEl = document.querySelector('.sidebar-right .avatar-circle');
+    const avatarCircleEl = document.querySelector('.user-profile-card .avatar-circle');
+    
+    console.log('updateGreeting called');
+    console.log('User object:', user);
+    console.log('Profile image:', user?.profile_image);
+    console.log('Avatar circle element:', avatarCircleEl);
     
     if (user) {
         const name = user.full_name ? user.full_name.split(' ')[0] : user.username;
@@ -51,6 +56,7 @@ function updateGreeting() {
         // Update avatar - show image if available, otherwise show initial
         if (avatarCircleEl) {
             if (user.profile_image) {
+                console.log('Setting profile image:', user.profile_image);
                 // Clear existing content
                 avatarCircleEl.innerHTML = '';
                 // Create and add image
@@ -61,8 +67,15 @@ function updateGreeting() {
                 img.style.height = '100%';
                 img.style.objectFit = 'cover';
                 img.style.borderRadius = '50%';
+                img.onerror = () => {
+                    console.error('Failed to load image:', user.profile_image);
+                };
+                img.onload = () => {
+                    console.log('Image loaded successfully');
+                };
                 avatarCircleEl.appendChild(img);
             } else {
+                console.log('No profile image, showing initial');
                 // Show initial if no image
                 const initial = (user.full_name || user.username).charAt(0).toUpperCase();
                 avatarCircleEl.innerHTML = `<div class="avatar-text" id="avatarText">${initial}</div>`;

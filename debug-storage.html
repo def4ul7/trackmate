@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug localStorage - TrackMate</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .data-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .value {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        img {
+            max-width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 10px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 localStorage Debug Tool</h1>
+        
+        <div id="status"></div>
+        
+        <div class="data-box">
+            <div class="label">User Data from localStorage:</div>
+            <div class="value" id="userData"></div>
+        </div>
+        
+        <div class="data-box">
+            <div class="label">Profile Image Path:</div>
+            <div class="value" id="imagePath"></div>
+            <div id="imagePreview"></div>
+        </div>
+        
+        <div class="data-box">
+            <div class="label">All localStorage Keys:</div>
+            <div class="value" id="allKeys"></div>
+        </div>
+        
+        <div>
+            <button onclick="location.reload()">🔄 Refresh</button>
+            <button onclick="window.location.href='dashboard.html'">📊 Go to Dashboard</button>
+            <button onclick="window.location.href='profile.html'">👤 Go to Profile</button>
+        </div>
+    </div>
+    
+    <script>
+        const statusEl = document.getElementById('status');
+        const userDataEl = document.getElementById('userData');
+        const imagePathEl = document.getElementById('imagePath');
+        const imagePreviewEl = document.getElementById('imagePreview');
+        const allKeysEl = document.getElementById('allKeys');
+        
+        // Get user data
+        const userData = localStorage.getItem('trackmate_user');
+        
+        if (!userData) {
+            statusEl.innerHTML = '<div class="status error">❌ No user data found in localStorage. Please login first.</div>';
+            userDataEl.textContent = 'null';
+            imagePathEl.textContent = 'N/A';
+        } else {
+            try {
+                const user = JSON.parse(userData);
+                
+                // Display user data
+                userDataEl.textContent = JSON.stringify(user, null, 2);
+                
+                // Check profile_image
+                if (user.profile_image) {
+                    statusEl.innerHTML = '<div class="status success">✅ Profile image found in localStorage!</div>';
+                    imagePathEl.textContent = user.profile_image;
+                    
+                    // Try to display image
+                    const img = document.createElement('img');
+                    img.src = user.profile_image;
+                    img.onerror = () => {
+                        imagePreviewEl.innerHTML = '<div class="status error">❌ Image file not found at: ' + user.profile_image + '</div>';
+                    };
+                    img.onload = () => {
+                        imagePreviewEl.innerHTML = '<div class="status success">✅ Image loaded successfully!</div>';
+                        imagePreviewEl.appendChild(img);
+                    };
+                } else {
+                    statusEl.innerHTML = '<div class="status warning">⚠️ No profile_image property found in user data.</div>';
+                    imagePathEl.textContent = 'null or undefined';
+                }
+            } catch (e) {
+                statusEl.innerHTML = '<div class="status error">❌ Error parsing user data: ' + e.message + '</div>';
+                userDataEl.textContent = userData;
+                imagePathEl.textContent = 'Error';
+            }
+        }
+        
+        // Show all localStorage keys
+        const keys = Object.keys(localStorage);
+        allKeysEl.textContent = keys.length > 0 ? keys.join('\n') : 'No keys found';
+        
+        // Console logging for developer
+        console.log('=== localStorage Debug ===');
+        console.log('trackmate_user:', userData);
+        if (userData) {
+            try {
+                console.log('Parsed user:', JSON.parse(userData));
+            } catch (e) {
+                console.error('Parse error:', e);
+            }
+        }
+        console.log('All keys:', keys);
+    </script>
+</body>
+</html>
